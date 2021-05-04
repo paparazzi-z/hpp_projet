@@ -33,8 +33,11 @@ public class ReadData {
                 int tmp = Integer.valueOf(line[4].strip().split("\\.")[0]);
                 line[4] = Integer.toString(tmp);
                 System.out.println(line[0] + ", " + line[1] + ", " + line[2] + ", " + line[3] + ", " + line[4] + ", " + line[5] + ", " + line[6]);
-                for (int j = 0 ; j < line.length ; j ++)
-                    data.add(line[j]);
+
+                // for saving space, only save useful information
+                data.add(line[0]); //save person_id
+                data.add(line[4]); //save diagnosed_ts
+                data.add(line[5]); //save contaminated_by
             }
         } catch (IOException | CsvValidationException e) {
             e.printStackTrace();
