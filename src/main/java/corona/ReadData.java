@@ -37,7 +37,7 @@ public class ReadData {
         String[] line;
         Vector<String> data = new Vector<>(4);
         try {
-            if ((line = reader.readNext()) != null){
+            if ((line = this.reader.readNext()) != null){
                 this.finished = false;
                 int tmp = Integer.parseInt(line[4].strip().split("\\.")[0]);
                 line[4] = Integer.toString(tmp);
