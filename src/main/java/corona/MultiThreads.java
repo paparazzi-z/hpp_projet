@@ -1,34 +1,29 @@
 package corona;
 
-public class MultiThreads {
+import java.util.Vector;
 
-    public class ReadThread implements Runnable{
+public class MultiThreads implements Runnable{
 
-        private String name;
+    private String country;
+    private String dir;
+    public Vector<String> currentData = new Vector<>(4);
 
-        public ReadThread (String name) {
-            this.name = name;
-        }
-
-        @Override
-        public void run(){
-            ReadData dataFr = new ReadData("G:/HPP/HPP_projet/data/20/France.csv", "France");
-            ReadData dataIt = new ReadData("G:/HPP/HPP_projet/data/20/Italy.csv", "Italy");
-            ReadData dataSp = new ReadData("G:/HPP/HPP_projet/data/20/Spain.csv", "Spain");
-        }
+    public MultiThreads (String c, String dir) {
+        this.country = c;
+        this.dir = dir;
     }
 
-    public class CalculateThread implements Runnable{
+    @Override
+    public void run(){
+//        ReadData data = new ReadData(dir, country);
+//        System.out.println(currentData.size());
+//        data.openFile();
+////        do{
+//            currentData = data.readLine();
+//            System.out.println(currentData);
+//            System.out.println(currentData.size());
+////        }while(!data.finished);
 
-        private String name;
-
-        public CalculateThread (String name) {
-            this.name = name;
-        }
-
-        @Override
-        public void run(){
-
-        }
     }
+
 }
