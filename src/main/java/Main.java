@@ -6,17 +6,27 @@ public class Main {
 
         // Choose whether using multithreading
         boolean multi = false;
-        // Choose the size of the data. 20, 5000 or 1000000
-        String size = "20";
+        // Choose the folder going to use. "data" or "test"
+        String folder = "data";
+        // Choose the size of the data.
+        String size = "5000";
+        // Choose to use which countries' data. "Fr", "It", "Sp", "FrIt", "FrSp", "ItSp" or "FrItSp"
+        String country = "FrItSp";
 
-        CoronaVirus.initDirs(size);
+        CoronaVirus coronaVirus = new CoronaVirus(folder, size, country);
+
+        System.out.println("Begin reading data...");
+        long startTime = System.nanoTime();
 
         if (multi)
-            CoronaVirus.methodMultiThread();
+            coronaVirus.methodMultiThread();
         else
-            CoronaVirus.methodNaive();
+            coronaVirus.methodNaive();
 
-
+        long endTime = System.nanoTime();
+        System.out.println("Analyse done!");
+        System.out.println("Time used: " + (endTime-startTime)/1000000000.0 + " seconds");
+//        System.out.println(coronaVirus.getOutput());
 
     }
 

@@ -30,7 +30,7 @@ public class ReadData {
             return scanner.nextLine();
         }
         else {
-            return "";
+            return "end";
         }
     }
 
@@ -49,12 +49,12 @@ public class ReadData {
     }
 
     public Person parseLine(String s){
-        String[] line = s.split(",");
+        String[] line = s.split(","); // split each line with comma
         int person_id = Integer.parseInt(line[0]);
-        int diagnosed_ts = Integer.parseInt(line[4].strip().split("\\.")[0]);
+        int diagnosed_ts = Integer.parseInt(line[4].strip().split("\\.")[0]); // Delete white-space and numbers after the decimal point
         int contaminated_by;
         if (line[5].strip().equals("unknown"))
-            contaminated_by = -1;
+            contaminated_by = -1; // if the contaminated_by value is "unknown", set it to -1;
         else
             contaminated_by = Integer.parseInt(line[5].strip());
 

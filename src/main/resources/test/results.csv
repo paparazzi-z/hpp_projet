@@ -1,0 +1,7 @@
+1: France, 0, 10
+2: France, 0, 20
+3: Italy, 0, 18
+5: France, 0, 18, France, 3, 10, France, 2, 4
+6: Spain, 4, 10, Italy, 5, 10
+10: Italy, 9, 10, Italy, 6, 4
+12: Spain, 10, 10, France, 11, 10, Italy, 9, 4
