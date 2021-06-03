@@ -2,7 +2,7 @@ package corona;
 
 import java.util.Objects;
 
-public class Person {
+public class Person implements Comparable<Person> {
     private int person_id;
     private int diagnosed_ts;
     private int contaminated_by;
@@ -80,5 +80,10 @@ public class Person {
     @Override
     public int hashCode() {
         return Objects.hash(getPerson_id(), getDiagnosed_ts(), getContaminated_by(), getCountry(), getWeight());
+    }
+
+    @Override
+    public int compareTo(Person p){
+        return Integer.compare(this.getPerson_id(),p.getPerson_id());
     }
 }

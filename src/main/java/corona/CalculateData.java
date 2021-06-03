@@ -20,7 +20,7 @@ public class CalculateData {
         this.top3 = new InfectChain[3];
         this.roots = new ArrayList<>();
         this.chains = new ArrayList<>();
-        currentDate = 0;
+        this.currentDate = 0;
     }
 
     public void addNewPerson(Person p){
@@ -76,7 +76,7 @@ public class CalculateData {
         }
 
         //Sort chains and roots
-        sortChain();
+//        sortChain();
 //        calculateTop3();
 
     }

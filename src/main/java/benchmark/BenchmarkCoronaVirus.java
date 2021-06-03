@@ -22,17 +22,17 @@ public class BenchmarkCoronaVirus {
 
     private final ArrayList<URL> urls = new ArrayList<>();
 
-    @Param({"20"})//@Param({"20", "5000", "1000000"})
+    @Param({"20", "5000"})//@Param({"20", "5000", "1000000"})
     private String size;
 
 
     @Benchmark // ! avoid calls that return nothing
     public int benchmarkCoronaVirus() {
         String folder = "data";
-        String size = "20";
         String country = "FrItSp";
-        CoronaVirus covidVirus = new CoronaVirus(folder, size, country);
-        covidVirus.methodNaive();
+        CoronaVirus covidVirus = new CoronaVirus(folder, this.size, country);
+//        covidVirus.methodNaive();
+        covidVirus.methodMultiThread();
         return 1;
     }
 
