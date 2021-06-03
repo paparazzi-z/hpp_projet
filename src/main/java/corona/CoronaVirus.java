@@ -122,7 +122,7 @@ public class CoronaVirus {
                     readData.closeFile();
                 }
             }
-        BlockingQueue<Person> blockingQueueRead = new LinkedBlockingDeque<>(5000);
+        BlockingQueue<Person> blockingQueueRead = new LinkedBlockingDeque<>(100);
 
         readMultiThread readMultiThread = new readMultiThread(blockingQueueRead, peopleList, readDataList);
         calculateMultiThread calculateMultiThread = new calculateMultiThread(blockingQueueRead, calculateData);
@@ -134,6 +134,7 @@ public class CoronaVirus {
 
         readThread.start();
         calculateThread.start();
+
         try{
             readThread.join();
             calculateThread.join();
@@ -163,7 +164,9 @@ class readMultiThread implements Runnable{
 
     @Override
     public void run(){
-        read();
+//        synchronized (blockingQueueRead) {
+            read();
+//        }
     }
 
     public void read() {
@@ -174,11 +177,14 @@ class readMultiThread implements Runnable{
                     priority_person = person;
             }
             priority_person.setWeight(10);
+
             try {
                 blockingQueueRead.put(priority_person);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+            System.out.println(blockingQueueRead);
+
             int index = peopleList.indexOf(priority_person);
             String read_string = readDataList.get(index).readLine();
             if(!read_string.equals("end")){
@@ -205,15 +211,24 @@ class calculateMultiThread implements Runnable{
 
     @Override
     public void run(){
-        calculate();
+//        try {
+//            Thread.sleep(1);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+//        while(!blockingQueueRead.isEmpty())
+//        synchronized (blockingQueueRead) {
+            calculate();
+//        }
     }
 
     public void calculate(){
-        while (!blockingQueueRead.isEmpty()){
+        while (CoronaVirus.readThread.isAlive()||!blockingQueueRead.isEmpty()){
+            if(!blockingQueueRead.isEmpty())
             // Add person to calculation procedure
             try {
                 calculateData.calculate(blockingQueueRead.take());
-                output = calculateData.getTop3Output();
+                output = calculateData.getTop3();
                 System.out.println(output);
             } catch (InterruptedException e) {
                 e.printStackTrace();

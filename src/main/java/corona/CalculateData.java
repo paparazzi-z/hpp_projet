@@ -77,7 +77,7 @@ public class CalculateData {
 
         //Sort chains and roots
         sortChain();
-        calculateTop3();
+//        calculateTop3();
 
     }
 
@@ -105,23 +105,23 @@ public class CalculateData {
         }
     }
 
-    public void calculateTop3() {
-        top3Output = "";
-        if(chains.size() > 2){
-            for (int i = 0 ; i < 3 ; i++){
-                top3[i] = chains.get(i);
-                top3Output += top3[i].getCountry() + ", " + top3[i].getRoot().getPerson_id() + ", " + top3[i].getWeight() + ", ";
-            }
-        }
-        else {
-            for (int i = 0 ; i < chains.size() ; i++){
-                top3[i] = chains.get(i);
-                top3Output += top3[i].getCountry() + ", " + top3[i].getRoot().getPerson_id() + ", " + top3[i].getWeight() + ", ";
-            }
-        }
-        top3Output = top3Output.substring(0,top3Output.length()-2);
-        System.out.println(top3Output);
-    }
+//    public void calculateTop3() {
+//        top3Output = "";
+//        if(chains.size() > 2){
+//            for (int i = 0 ; i < 3 ; i++){
+//                top3[i] = chains.get(i);
+//                top3Output += top3[i].getCountry() + ", " + top3[i].getRoot().getPerson_id() + ", " + top3[i].getWeight() + ", ";
+//            }
+//        }
+//        else {
+//            for (int i = 0 ; i < chains.size() ; i++){
+//                top3[i] = chains.get(i);
+//                top3Output += top3[i].getCountry() + ", " + top3[i].getRoot().getPerson_id() + ", " + top3[i].getWeight() + ", ";
+//            }
+//        }
+//        top3Output = top3Output.substring(0,top3Output.length()-2);
+////        System.out.println(top3Output);
+//    }
 
 
     // Obtain TOP3 chains
@@ -140,7 +140,6 @@ public class CalculateData {
             }
         }
         top3Output = top3Output.substring(0,top3Output.length()-2);
-        System.out.println(top3Output);
         return top3Output;
     }
 
