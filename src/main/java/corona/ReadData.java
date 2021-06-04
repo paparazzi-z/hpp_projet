@@ -8,6 +8,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 import java.net.URL;
 
+// Class for reading data from file. It manage InputStream and Scanner.
 public class ReadData {
 
     private InputStream inputStream = null;
@@ -15,6 +16,7 @@ public class ReadData {
     private String country;
 
 
+    // Open a file with a URL. Create InputStream and Scanner.
     public void openFile(URL dir) {
         this.country = FilenameUtils.getBaseName(dir.getPath());
         try {
@@ -25,6 +27,7 @@ public class ReadData {
         }
     }
 
+    // Read next line
     public String readLine() {
         if (scanner.hasNext()) {
             return scanner.nextLine();
@@ -34,6 +37,7 @@ public class ReadData {
         }
     }
 
+    // Close the file when read is end.
     public void closeFile() {
         if (inputStream != null) {
             try {
@@ -48,6 +52,7 @@ public class ReadData {
         }
     }
 
+    // Parse line read from file to a Person. Only save useful information.
     public Person parseLine(String s){
         String[] line = s.split(","); // split each line with comma
         int person_id = Integer.parseInt(line[0]);

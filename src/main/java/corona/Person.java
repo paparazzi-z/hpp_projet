@@ -2,6 +2,7 @@ package corona;
 
 import java.util.Objects;
 
+// Class Person to store information of each person
 public class Person implements Comparable<Person> {
     private int person_id;
     private int diagnosed_ts;
@@ -9,6 +10,7 @@ public class Person implements Comparable<Person> {
     private String country;
     private int weight;
 
+    // Constructor
     public Person(int p, int d, int c, String co){
         this.person_id = p;
         this.diagnosed_ts = d;
@@ -16,6 +18,7 @@ public class Person implements Comparable<Person> {
         this.country = co;
     }
 
+    // Update weight of the person by using the currentTime which is the diagnosed_ts of newest person in calculation procedure.
     public void updatePersonWeight(int currentTime){
         int period = currentTime - this.diagnosed_ts;
 

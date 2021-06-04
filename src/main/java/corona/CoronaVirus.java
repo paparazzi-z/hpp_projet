@@ -8,6 +8,11 @@ import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
 
+
+ /*
+Principle class of the project. You can choose methodNaive or methodMultiThread in main function. It control the
+global flow of the project.
+ */
 public class CoronaVirus {
 
     private final List<URL> dirs = new ArrayList<>();
@@ -27,13 +32,16 @@ public class CoronaVirus {
     static Thread readThread;
     static Thread calculateThread;
 
+    // Constructor
     public CoronaVirus(String folder, String s, String c){
         size = Integer.parseInt(s);
 
+        // Get URL of each file
         dirFr = CoronaVirus.class.getResource("/" + folder + "/" + s + "/France.csv");
         dirIt = CoronaVirus.class.getResource("/" + folder + "/" + s + "/Italy.csv");
         dirSp = CoronaVirus.class.getResource("/" + folder + "/" + s + "/Spain.csv");
 
+        // Add URL(s) to list
         if(c.contains("Fr"))
             dirs.add(dirFr);
         if(c.contains("It"))
@@ -43,8 +51,10 @@ public class CoronaVirus {
 
     }
 
+    // Naive method(without multithreading)
     public void methodNaive(){
         try{
+            // Create InputStream and Scanner for each file which are written in class ReadData. Add them to a list.
             List<ReadData> readDataList = new ArrayList<>();
 
             for(URL dirCountry : dirs){
@@ -53,8 +63,10 @@ public class CoronaVirus {
                 readData.openFile(dirCountry);
             }
 
+            // Create a list to store data (as a Person) which is read from file(s). Store 3 Person max.
             peopleList = new ArrayList<>();
 
+            // Read first line from file(s)
             Iterator<ReadData> iterator = readDataList.iterator();
             while (iterator.hasNext()){
                 ReadData readData = iterator.next();
@@ -70,6 +82,7 @@ public class CoronaVirus {
                 }
             }
 
+            // Continually read next line in file(s) until there is no data to read.
             if (readDataList.isEmpty()){
                 System.out.println("NO DATA!!!");
                 this.output = "NO DATA!!!";
@@ -77,6 +90,7 @@ public class CoronaVirus {
             else{
                 while (!readDataList.isEmpty()){
 //                    Collections.sort(peopleList);
+                    // Set the person with smallest id as priority_person which will be calculated.
                     priority_person = peopleList.get(0);
                     for(Person person : peopleList){
                         if (person.getPerson_id() < priority_person.getPerson_id())
@@ -84,12 +98,13 @@ public class CoronaVirus {
                     }
                     priority_person.setWeight(10);
 
-                    // Add person to calculation procedure
+                    // Add person to calculation procedure where we are going to create and calculate infect chains.
                     calculateData.calculate(priority_person);
 
 //                output = calculateData.getTop3();
 //                System.out.println(output);
 
+                    // Read next line of the file which the former priority_person belongs to.
                     int index = peopleList.indexOf(priority_person);
                     String read_string = readDataList.get(index).readLine();
                     if(!read_string.equals("end")){
@@ -103,6 +118,7 @@ public class CoronaVirus {
                     }
                 }
 
+                // Sort all chains in order and get TOP3 chains.
                 calculateData.sortChain();
                 output = calculateData.getTop3();
                 System.out.println(output);
@@ -116,7 +132,9 @@ public class CoronaVirus {
 
     }
 
+    // Method using multithreading
     public void methodMultiThread(){
+        // Create InputStream and Scanner for each file which are written in class ReadData. Add them to a list.
         List<ReadData> readDataList = new ArrayList<>();
 
         for(URL dirCountry : dirs){
@@ -125,8 +143,10 @@ public class CoronaVirus {
             readData.openFile(dirCountry);
         }
 
+        // Create a list to store data (as a Person) which is read from file(s). Store 3 Person max.
         peopleList = new ArrayList<>();
 
+        // Read first line from file(s)
         Iterator<ReadData> iterator = readDataList.iterator();
         while (iterator.hasNext()){
             ReadData readData = iterator.next();
@@ -142,22 +162,28 @@ public class CoronaVirus {
             }
         }
 
+        // Continually read next line in file(s) until there is no data to read.
         if (readDataList.isEmpty()){
             System.out.println("NO DATA!!!");
             this.output = "NO DATA!!!";
         }
         else {
+            // Create a BlockingQueue to store the data (as a Person) read from file.
             BlockingQueue<Person> blockingQueueRead = new LinkedBlockingDeque<>(20);
 
+            // Create two instances of readMultiThread and calculateMultiThread
             readMultiThread readMultiThread = new readMultiThread(blockingQueueRead, peopleList, readDataList);
             calculateMultiThread calculateMultiThread = new calculateMultiThread(blockingQueueRead, calculateData);
 
+            // Create two threads for reading and calculating
             readThread = new Thread(readMultiThread);
             calculateThread = new Thread(calculateMultiThread);
 
+            // Set priority
             readThread.setPriority(1);
             calculateThread.setPriority(10);
 
+            // Start threads
             readThread.start();
             calculateThread.start();
 
@@ -180,11 +206,13 @@ public class CoronaVirus {
     }
 }
 
+// Class for reading data which implements interface Runnable to realize multithreading
 class readMultiThread implements Runnable{
     BlockingQueue<Person> blockingQueueRead;
     List<Person> peopleList;
     List<ReadData> readDataList;
 
+    // Constructor
     public readMultiThread(BlockingQueue<Person> blockingQueueRead, List<Person> peopleList, List<ReadData> readDataList) {
         this.blockingQueueRead = blockingQueueRead;
         this.peopleList = peopleList;
@@ -200,6 +228,7 @@ class readMultiThread implements Runnable{
 
     public synchronized void read() {
         while (!readDataList.isEmpty()) {
+            // Set the person with smallest id as priority_person which will be calculated.
             Person priority_person = peopleList.get(0);
             for (Person person : peopleList) {
                 if (person.getPerson_id() < priority_person.getPerson_id())
@@ -207,6 +236,7 @@ class readMultiThread implements Runnable{
             }
             priority_person.setWeight(10);
 
+            // Put priority_person in to BlockingQueue
             try {
                 blockingQueueRead.put(priority_person);
             } catch (InterruptedException e) {
@@ -214,6 +244,7 @@ class readMultiThread implements Runnable{
             }
 //            System.out.println(blockingQueueRead);
 
+            // Read next line of the file which the former priority_person belongs to.
             int index = peopleList.indexOf(priority_person);
             String read_string = readDataList.get(index).readLine();
             if(!read_string.equals("end")){
@@ -228,11 +259,13 @@ class readMultiThread implements Runnable{
     }
 }
 
+// Class for calculating data which implements interface Runnable to realize multithreading
 class calculateMultiThread implements Runnable{
     BlockingQueue<Person> blockingQueueRead;
     CalculateData calculateData;
     String output;
 
+    // Constructor
     public calculateMultiThread(BlockingQueue<Person> blockingQueueRead, CalculateData calculateData) {
         this.blockingQueueRead = blockingQueueRead;
         this.calculateData = calculateData;
@@ -247,7 +280,10 @@ class calculateMultiThread implements Runnable{
 //        }
 //        while(!blockingQueueRead.isEmpty())
 //        synchronized (blockingQueueRead) {
+
         calculate();
+
+        // Sort all chains in order and get TOP3 chains.
         calculateData.sortChain();
         output = calculateData.getTop3();
         System.out.println(output);
@@ -257,7 +293,7 @@ class calculateMultiThread implements Runnable{
     public synchronized void calculate(){
         while (CoronaVirus.readThread.isAlive()||!blockingQueueRead.isEmpty()){
             if(!blockingQueueRead.isEmpty())
-                // Add person to calculation procedure
+                // Add Person which is taken from BlockingQueue to calculation procedure
                 try {
                     calculateData.calculate(blockingQueueRead.take());
 //                    output = calculateData.getTop3();

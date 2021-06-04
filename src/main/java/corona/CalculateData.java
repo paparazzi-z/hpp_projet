@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+// Class to calculate chains and manage the data structure of the project
 public class CalculateData {
 
     private Person personGetInfected;
@@ -15,6 +16,7 @@ public class CalculateData {
 
     private int currentDate;
 
+    // Constructor
     public CalculateData() {
 
         this.top3 = new InfectChain[3];
@@ -23,18 +25,24 @@ public class CalculateData {
         this.currentDate = 0;
     }
 
+    // Set new personGetInfected, update currentDate and add the person in to HashMap.
     public void addNewPerson(Person p){
         this.personGetInfected = p;
         this.currentDate = p.getDiagnosed_ts();
         PeopleHash.addPerson(p);
     }
 
+    // Create a new chain whose root is personGetInfected
     public void createNewChain(){
         InfectChain newChain = new InfectChain(this.personGetInfected);
         chains.add(newChain);
         roots.add(this.personGetInfected);
     }
 
+    /* Recursive method to find source of infection of the person. Find the source using HashMap.
+    The source should be in the List roots. If the source has been removed from HashMap. It means that the chain has
+    already 'dead'. In this case, return person himself in order to create new chain.
+     */
     public Person findRoot(Person p){
         if (p.getContaminated_by() == -1){
             return p;
@@ -49,7 +57,7 @@ public class CalculateData {
     }
 
 
-    // Calculate chains
+    // Principle method to calculate chains and manage data structure
     public void calculate(Person p) {
         addNewPerson(p);
 
@@ -63,9 +71,10 @@ public class CalculateData {
             removeChain();
         }
 
-
+        // Find source of infection of the person
         Person root = findRoot(this.personGetInfected);
 
+        // Create new chain or add to existed chain
         if(root.equals(this.personGetInfected)){
             createNewChain();
         }

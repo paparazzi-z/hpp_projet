@@ -3,14 +3,16 @@ package corona;
 import java.util.ArrayList;
 import java.util.List;
 
+// Class to store the information of each chain
 public class InfectChain implements Comparable<InfectChain> {
 
     private Person root;
-    private List<Person> members;
+    private List<Person> members; // Persons in same chain
     private Person end;
     private int weight;
     private String country;
 
+    // Constructor
     public InfectChain(Person r){
         this.root = r;
         this.members = new ArrayList<>();
@@ -20,12 +22,14 @@ public class InfectChain implements Comparable<InfectChain> {
         this.country = r.getCountry();
     }
 
+    // Add person in to chain
     public void addPerson(Person p){
         this.members.add(p);
         this.end = p;
         this.weight += p.getWeight();
     }
 
+    // Update all members' weight to update weight of chain
     public void updateChainWeight(int currentTime){
         this.weight = 0;
         for (Person member:members){
